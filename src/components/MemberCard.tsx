@@ -40,7 +40,7 @@ export default function MemberCard({
               alt="Project data image"
               width={500}
               height={500}
-              className="w-auto h-full"
+              className="object-cover"
               unoptimized
             ></Image>
             <h1 className="text-xl absolute bottom-2 z-10 w-full bg-black/50 text-white group-hover:hidden text-center">

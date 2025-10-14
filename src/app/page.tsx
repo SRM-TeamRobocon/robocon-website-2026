@@ -17,6 +17,7 @@ import ProjectsDisplay from "@/components/ProjectsDisplay";
 
 import RoboConEvent from "@/components/RoboConEvent";
 import RecruitmentSection from "@/components/RecruitmentSection";
+import HackathonSection from "@/components/HackathonSection";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,6 +77,10 @@ export default function Home() {
             className="animate-bounce"
           ></Image>
         </div>
+      </section>
+
+      <section className="relative max-md:mt-20">
+        <HackathonSection />
       </section>
 
       {/* Second section */}
@@ -140,10 +145,8 @@ export default function Home() {
       </section> */}
       
       {/*Recruitment section*/}
-      {/* <section className="relative max-md:mt-20">
-        <RecruitmentSection />
-      </section>/ */}
-
+        {/* <section className="relative max-md:mt-20">
+        <RecruitmentSection /> */}
       {/* Third section */}
       <section className="w-full h-full">
         <div className="text-3xl md:text-4xl pl-10 md:pl-44 mt-44 text-white">
