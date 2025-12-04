@@ -145,7 +145,7 @@ export default function Team() {
                       Facebook={obj["Facebook"]}
                       Linkedin={obj["Linkedin"]}
                       Instagram={obj["Instagram"]}
-                      ImageUrl={(obj as any)["Image"] || "https://mixingimages.us/wp-content/uploads/2024/02/Instagram-Blank-Profile-Picture.jpg"}
+                      ImageUrl={(obj as any)["Image"] || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                     />
                   ))}
                 </div>
