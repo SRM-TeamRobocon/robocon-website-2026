@@ -79,9 +79,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative max-md:mt-20">
+      {/* <section className="relative max-md:mt-20">
         <HackathonSection />
-      </section>
+      </section> */}
 
       {/* Second section */}
       <section className="w-full h-full md:h-screen flex flex-col items-center justify-center mt-20 md:mt-0">
