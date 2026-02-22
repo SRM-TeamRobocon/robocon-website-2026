@@ -18,7 +18,7 @@ import ProjectsDisplay from "@/components/ProjectsDisplay";
 import RoboConEvent from "@/components/RoboConEvent";
 import RecruitmentSection from "@/components/RecruitmentSection";
 import HackathonSection from "@/components/HackathonSection";
-
+import JoselinSection from "@/components/JoselinSection";
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -82,6 +82,9 @@ export default function Home() {
       {/* <section className="relative max-md:mt-20">
         <HackathonSection />
       </section> */}
+      <section className="">
+        <JoselinSection />
+      </section>
 
       {/* Second section */}
       <section className="w-full h-full md:h-screen flex flex-col items-center justify-center mt-20 md:mt-0">
