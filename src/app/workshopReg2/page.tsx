@@ -98,26 +98,18 @@ export default function App() {
     return null;
   }
 
-  async function submitToGoogleSheets(
+  async function submitRegistration(
     formData: Record<string, string>,
-    paymentId: string,
-    orderId: string
+    transactionId: string
   ) {
-    const fd = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      fd.append(key, value);
+    const response = await fetch("/api/payment/submit-manual-registration", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ formData, transactionId }),
     });
-    fd.append("PaymentID", paymentId);
-    fd.append("OrderID", orderId);
-    fd.append("PaymentStatus", "PENDING_MANUAL");
-    try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec",
-        { method: "POST", body: fd, mode: "no-cors" }
-      );
-    } catch (error) {
-      console.error("Google Sheets Error:", error);
-      throw new Error("Failed to submit connection. Check your network.");
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || "Failed to submit registration");
     }
   }
 
@@ -138,22 +130,25 @@ export default function App() {
     setLoading(true);
 
     try {
-      await submitToGoogleSheets(
+      await submitRegistration(
         formData,
-        formData.TransactionID.trim(),
-        "MANUAL_UPI_ORDER"
+        formData.TransactionID.trim()
       );
       setPaymentState("success");
       setTimeout(() => {
         router.push(
-          `/workshopReg2/success?paymentId=${formData.TransactionID.trim()}&orderId=MANUAL_UPI_ORDER`
+          `/workshopReg2/success?transactionId=${formData.TransactionID.trim()}`
         );
       }, 1500);
     } catch (err: any) {
-      console.error("Payment error:", err);
+      console.error("Submission error:", err);
       setPaymentState("failed");
-      setPaymentError(err.message || "Something went wrong. Please try again.");
+      const reason = err.message || "Something went wrong. Please try again.";
+      setPaymentError(reason);
       setLoading(false);
+      setTimeout(() => {
+        router.push(`/workshopReg2/failed?reason=${encodeURIComponent(reason)}`);
+      }, 3000);
     }
   }
 
@@ -183,7 +178,7 @@ export default function App() {
                 Registering You
               </h3>
               <p className="text-gray-400 text-sm">
-                Payment verified! Submitting your registration...
+                Submitting your registration...
               </p>
             </div>
           )}
@@ -206,7 +201,7 @@ export default function App() {
                 </svg>
               </div>
               <h3 className="text-2xl text-white font-bold mb-2">
-                Payment Successful! 🎉
+                Registration Successful! 🎉
               </h3>
               <p className="text-emerald-400 text-sm">
                 Redirecting to confirmation page...

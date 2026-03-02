@@ -74,6 +74,12 @@ function buildParticipantHtml(details: RegistrationDetails): string {
                         <td style="color:#999;font-size:13px;padding:4px 0;">Workshop</td>
                         <td style="color:#fff;font-size:13px;padding:4px 0;">${workshop}</td>
                       </tr>
+                      ${paymentId.startsWith("UTR-") ? `
+                      <tr>
+                        <td style="color:#999;font-size:13px;padding:4px 0;">Transaction ID</td>
+                        <td style="color:#f472b6;font-size:13px;padding:4px 0;font-family:monospace;">${paymentId.replace("UTR-", "")}</td>
+                      </tr>
+                      ` : `
                       <tr>
                         <td style="color:#999;font-size:13px;padding:4px 0;">Payment ID</td>
                         <td style="color:#f472b6;font-size:13px;padding:4px 0;font-family:monospace;">${paymentId}</td>
@@ -82,6 +88,7 @@ function buildParticipantHtml(details: RegistrationDetails): string {
                         <td style="color:#999;font-size:13px;padding:4px 0;">Order ID</td>
                         <td style="color:#f472b6;font-size:13px;padding:4px 0;font-family:monospace;">${orderId}</td>
                       </tr>
+                      `}
                     </table>
                   </td>
                 </tr>
@@ -143,8 +150,7 @@ WhatsApp:    ${formData.WhatsAppNumber || "—"}
 Hostel:      ${formData.Hostel || "—"}
 Room:        ${formData.Room || "—"}
 
-Payment ID:  ${paymentId}
-Order ID:    ${orderId}
+${paymentId.startsWith("UTR-") ? `Transaction ID: ${paymentId.replace("UTR-", "")}` : `Payment ID:  ${paymentId}\nOrder ID:    ${orderId}`}
 Timestamp:   ${timestamp}
 `.trim();
 }

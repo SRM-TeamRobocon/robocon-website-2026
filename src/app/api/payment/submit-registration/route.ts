@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
         }
         fd.append("PaymentID", paymentId);
         fd.append("OrderID", orderId);
+        fd.append("TransactionID", "");
         fd.append("PaymentStatus", "VERIFIED");
 
         const sheetRes = await fetch(GOOGLE_SHEET_URL, {
@@ -74,6 +75,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
                 { error: "Registration submission failed" },
                 { status: 502 }
+            );
+        }
+
+        // Check for duplicate registration
+        const sheetData = await sheetRes.json().catch(() => ({}));
+        if (sheetData.result === "duplicate") {
+            return NextResponse.json(
+                { error: "This registration number is already registered for the workshop." },
+                { status: 409 }
             );
         }
 
