@@ -52,6 +52,7 @@ export default function App() {
   const [paymentState, setPaymentState] = useState<PaymentState>("idle");
   const [paymentError, setPaymentError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
 
 
 
@@ -260,18 +261,18 @@ export default function App() {
           <div className="absolute top-40 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative z-10 text-center pt-10 pb-4 px-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium mb-5 tracking-wide">
+        <div className="relative z-10 text-center pt-8 md:pt-10 pb-4 px-5 md:px-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium mb-4 md:mb-5 tracking-wide">
             <span className="w-1.5 h-1.5 bg-rose-400 rounded-full animate-pulse" />
             REGISTRATIONS OPEN
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">
+          <h1 className="text-3xl md:text-5xl font-bold text-white mb-2 md:mb-3">
             Solidworks{" "}
             <span className="bg-gradient-to-r from-rose-500 to-red-400 bg-clip-text text-transparent">
               Workshop
             </span>
           </h1>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <p className="text-gray-400 text-base md:text-lg max-w-xl mx-auto">
             Master 3D CAD modeling with hands-on projects. From basics to
             assemblies — build real engineering designs.
           </p>
@@ -279,11 +280,10 @@ export default function App() {
       </div>
 
       {/* Main Content — Payment Card + Form */}
-      <div className="max-w-6xl mx-auto px-4 pb-6">
-        <div className="flex gap-8 justify-center items-start flex-wrap lg:flex-nowrap">
-          {/* Left Column — Payment + Info */}
-          <div className="w-full max-w-[380px] space-y-5 flex-shrink-0">
-            {/* Payment Card */}
+      <div className="max-w-6xl mx-auto px-5 md:px-4 pb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-5 md:gap-8 justify-center items-start">
+          {/* Payment Card — order 1 on mobile, top-left on desktop */}
+          <div className="order-1 lg:col-start-1 lg:row-start-1">
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 via-gray-850 to-gray-900 border border-gray-700/30 p-6 shadow-2xl shadow-rose-500/5">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(225,29,72,0.06),transparent_70%)] pointer-events-none" />
               <div className="relative z-10">
@@ -350,12 +350,44 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => {
-                        navigator.clipboard.writeText("81045352551-2@ybl");
-                        alert("UPI ID Copied to Clipboard!");
+                        const upiId = "81045352551-2@ybl";
+                        if (navigator.clipboard && window.isSecureContext) {
+                          navigator.clipboard.writeText(upiId).then(() => {
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          }).catch(() => {
+                            // Fallback
+                            const ta = document.createElement("textarea");
+                            ta.value = upiId;
+                            ta.style.position = "fixed";
+                            ta.style.opacity = "0";
+                            document.body.appendChild(ta);
+                            ta.select();
+                            document.execCommand("copy");
+                            document.body.removeChild(ta);
+                            setCopied(true);
+                            setTimeout(() => setCopied(false), 2000);
+                          });
+                        } else {
+                          // Fallback for non-secure contexts
+                          const ta = document.createElement("textarea");
+                          ta.value = upiId;
+                          ta.style.position = "fixed";
+                          ta.style.opacity = "0";
+                          document.body.appendChild(ta);
+                          ta.select();
+                          document.execCommand("copy");
+                          document.body.removeChild(ta);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }
                       }}
-                      className="text-xs bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-md transition-colors font-medium border border-rose-500/20"
+                      className={`text-xs px-3 py-1.5 rounded-md transition-colors font-medium border ${copied
+                        ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20"
+                        : "bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border-rose-500/20"
+                        }`}
                     >
-                      Copy
+                      {copied ? "Copied!" : "Copy"}
                     </button>
                   </div>
                 </div>
@@ -367,46 +399,11 @@ export default function App() {
                 </div>
               </div>
             </div>
-
-            {/* Workshop highlights mini-card */}
-            <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-700/30 p-5">
-              <h4 className="text-white font-bold text-sm mb-3 uppercase tracking-wider">
-                What You Get
-              </h4>
-              <div className="space-y-2.5">
-                {[
-                  "Hands-on 3D modeling sessions",
-                  "Part, Assembly & Drawing mastery",
-                  "Mini design challenge",
-                  "Official certificate",
-                  "Workshop materials & resources",
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <div className="w-5 h-5 rounded-full bg-rose-500/15 flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-3 h-3 text-rose-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                    <span className="text-gray-300 text-sm">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
-          {/* Right Column — Registration Form */}
-          <div className="w-full max-w-lg">
-            <div className="rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-gray-700/30 p-6 md:p-8 shadow-2xl backdrop-blur-sm">
+          {/* Registration Form — order 2 on mobile, right column on desktop spanning both rows */}
+          <div className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2">
+            <div className="rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-950/80 border border-gray-700/30 p-5 md:p-8 shadow-2xl backdrop-blur-sm">
               <h3 className="text-white font-bold text-xl mb-6 flex items-center gap-2">
                 <svg
                   className="w-5 h-5 text-rose-400"
@@ -693,22 +690,59 @@ export default function App() {
               )}
             </div>
           </div>
+
+          {/* What You Get — order 3 on mobile, bottom-left on desktop */}
+          <div className="order-3 lg:col-start-1 lg:row-start-2">
+            <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-950 border border-gray-700/30 p-5">
+              <h4 className="text-white font-bold text-sm mb-3 uppercase tracking-wider">
+                What You Get
+              </h4>
+              <div className="space-y-2.5">
+                {[
+                  "Hands-on 3D modeling sessions",
+                  "Part, Assembly & Drawing mastery",
+                  "Mini design challenge",
+                  "Official certificate",
+                  "Workshop materials & resources",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5">
+                    <div className="w-5 h-5 rounded-full bg-rose-500/15 flex items-center justify-center flex-shrink-0">
+                      <svg
+                        className="w-3 h-3 text-rose-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={3}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* ─────── FAQ Section ─────── */}
-      <div className="max-w-3xl mx-auto px-4 py-16">
-        <div className="text-center mb-10">
+      <div className="max-w-3xl mx-auto px-5 md:px-4 py-10 md:py-16">
+        <div className="text-center mb-8 md:mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-4 tracking-wide">
             GOT QUESTIONS?
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="text-2xl md:text-4xl font-bold text-white mb-2 md:mb-3">
             Frequently Asked{" "}
             <span className="bg-gradient-to-r from-rose-500 to-red-400 bg-clip-text text-transparent">
               Questions
             </span>
           </h2>
-          <p className="text-gray-400">
+          <p className="text-gray-400 text-sm md:text-base">
             Everything you need to know about the Solidworks Workshop
           </p>
         </div>
@@ -724,7 +758,7 @@ export default function App() {
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left"
+                className="w-full flex items-center justify-between p-4 md:p-5 text-left"
               >
                 <span
                   className={`font-medium text-sm md:text-base transition-colors ${openFaq === i ? "text-white" : "text-gray-300"
