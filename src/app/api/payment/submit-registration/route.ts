@@ -6,8 +6,7 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
-const GOOGLE_SHEET_URL =
-    "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec";
+const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_WEBHOOK_URL!;
 
 export async function POST(req: NextRequest) {
     try {
