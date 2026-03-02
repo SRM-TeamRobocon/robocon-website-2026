@@ -17,6 +17,11 @@ export default function Header() {
       duration: 800,
       once: false,
     });
+    // Refresh AOS after hydration to recalculate element positions in production
+    const timer = setTimeout(() => {
+      AOS.refresh();
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const scrollToBottom = () => {
@@ -117,9 +122,8 @@ export default function Header() {
         </div>
       </div>
       <div
-        className={`${
-          isMenuOpen ? "flex" : "hidden"
-        } fixed top-0 w-screen h-full px-10 justify-center items-center z-[200] bg-black/20 backdrop-blur-sm md:hidden`}
+        className={`${isMenuOpen ? "flex" : "hidden"
+          } fixed top-0 w-screen h-full px-10 justify-center items-center z-[200] bg-black/20 backdrop-blur-sm md:hidden`}
         onClick={() => setMenuValue(false)}
       >
         <div
