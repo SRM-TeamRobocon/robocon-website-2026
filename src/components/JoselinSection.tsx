@@ -44,14 +44,7 @@ const JoselinSection = () => {
                         {/* Description Text */}
                         <div className="space-y-4 mb-8 text-gray-200 opacity-70 leading-relaxed">
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                                exercitation ullamco laboris.
-                            </p>
-                            <p>
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-                                fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-                                culpa qui officia deserunt mollit anim id est laborum.
+                                Seeing the SRM Team Robocon grow has been one of the most rewarding parts of my role at SRM IST. I firmly believe that competitive robotics is not just about engineering machines, but about nurturing problem-solving, creativity, and teamwork among our students. Over the years, I’ve witnessed our team take on challenging problem statements, push technical boundaries from CAD design to PCB development, and translate theory into innovative robots with precision and purpose. Every workshop we conduct be it in SolidWorks, PCB design, or hands-on training reinforces my conviction that experiential learning empowers our students with industry-relevant skills. Their dedication and resilience, especially during competitions like DD Robocon, reflect the spirit of innovation and collaboration that defines SRM Team Robocon
                             </p>
                         </div>
 
