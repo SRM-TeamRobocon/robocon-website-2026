@@ -109,11 +109,15 @@ export default function App() {
     fd.append("PaymentID", paymentId);
     fd.append("OrderID", orderId);
     fd.append("PaymentStatus", "PENDING_MANUAL");
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec",
-      { method: "POST", body: fd }
-    );
-    if (!response.ok) throw new Error("Failed to submit registration");
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec",
+        { method: "POST", body: fd, mode: "no-cors" }
+      );
+    } catch (error) {
+      console.error("Google Sheets Error:", error);
+      throw new Error("Failed to submit connection. Check your network.");
+    }
   }
 
   async function handlePayment(e: React.FormEvent) {
@@ -328,23 +332,25 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Blank Space for User to add image manually */}
-                <div className="w-full aspect-square bg-gray-800/40 rounded-xl mb-5 flex items-center justify-center border-2 border-dashed border-gray-600">
-                  <div className="text-center p-4">
-                    <p className="text-gray-400 text-sm font-medium">Add QR Code Image Here</p>
-                    <p className="text-gray-500 text-xs mt-1">(Replace this div manually later)</p>
-                  </div>
+                {/* QR Code */}
+                <div className="w-full aspect-square bg-white rounded-xl mb-5 flex items-center justify-center p-2 shadow-inner overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/upi-qr.jpg"
+                    alt="Scan to Pay via UPI"
+                    className="w-full h-full object-contain mix-blend-multiply"
+                  />
                 </div>
 
                 <div className="space-y-3 mb-5">
                   <div className="flex items-center justify-between bg-gray-800/80 border border-gray-700/50 rounded-lg px-4 py-3 shadow-inner">
                     <span className="text-gray-300 font-mono text-sm tracking-widest font-medium">
-                      srmteamrobocon@okaxis
+                      81045352551-2@ybl
                     </span>
                     <button
                       type="button"
                       onClick={() => {
-                        navigator.clipboard.writeText("srmteamrobocon@okaxis");
+                        navigator.clipboard.writeText("81045352551-2@ybl");
                         alert("UPI ID Copied to Clipboard!");
                       }}
                       className="text-xs bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-md transition-colors font-medium border border-rose-500/20"

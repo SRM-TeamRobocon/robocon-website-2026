@@ -112,11 +112,15 @@ export default function App() {
     fd.append("PaymentID", paymentId);
     fd.append("OrderID", orderId);
     fd.append("PaymentStatus", "VERIFIED");
-    const response = await fetch(
-      "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec",
-      { method: "POST", body: fd }
-    );
-    if (!response.ok) throw new Error("Failed to submit registration");
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycby9w-7ZDzsLxXakw5rlKGVjL_A3uZRbZDgvkfXukCPw06kpqn9pqD3DPMh3UuKOFfcFJg/exec",
+        { method: "POST", body: fd, mode: "no-cors" }
+      );
+    } catch (error) {
+      console.error("Google Sheets Error:", error);
+      throw new Error("Failed to submit connection. Check your network.");
+    }
   }
 
   async function handlePayment(e: React.FormEvent) {
