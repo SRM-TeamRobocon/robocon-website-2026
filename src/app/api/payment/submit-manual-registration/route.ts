@@ -1,56 +1,25 @@
-import Razorpay from "razorpay";
 import { NextRequest, NextResponse } from "next/server";
 import { sendConfirmationEmails } from "@/lib/send-emails";
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
 
 const GOOGLE_SHEET_URL = process.env.GOOGLE_SHEET_WEBHOOK_URL!;
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { formData, paymentId, orderId } = body;
+        const { formData, transactionId } = body;
 
         // Validate required fields
-        if (!formData || !paymentId || !orderId) {
+        if (!formData || !transactionId) {
             return NextResponse.json(
                 { error: "Missing required fields" },
                 { status: 400 }
             );
         }
 
-        // Double-check payment status with Razorpay API
-        let payment;
-        try {
-            payment = await razorpay.payments.fetch(paymentId);
-        } catch (fetchErr) {
-            console.error("Failed to fetch payment from Razorpay:", fetchErr);
+        // Validate TransactionID format (12-digit UTR)
+        if (!/^\d{12}$/.test(transactionId.trim())) {
             return NextResponse.json(
-                { error: "Could not verify payment with Razorpay" },
-                { status: 502 }
-            );
-        }
-
-        // Verify the payment is actually captured/authorized and matches the order
-        if (payment.status !== "captured" && payment.status !== "authorized") {
-            console.warn(
-                `❌ Payment ${paymentId} has status "${payment.status}", not captured/authorized`
-            );
-            return NextResponse.json(
-                { error: `Payment not completed. Status: ${payment.status}` },
-                { status: 400 }
-            );
-        }
-
-        if (payment.order_id !== orderId) {
-            console.warn(
-                `❌ Order ID mismatch: expected ${orderId}, got ${payment.order_id}`
-            );
-            return NextResponse.json(
-                { error: "Order ID mismatch" },
+                { error: "Transaction ID must be exactly 12 digits" },
                 { status: 400 }
             );
         }
@@ -60,10 +29,10 @@ export async function POST(req: NextRequest) {
         for (const [key, value] of Object.entries(formData)) {
             params.append(key, value as string);
         }
-        params.append("PaymentID", paymentId);
-        params.append("OrderID", orderId);
-        params.append("TransactionID", "");
-        params.append("PaymentStatus", "VERIFIED");
+        params.append("PaymentID", "");
+        params.append("OrderID", "");
+        params.append("TransactionID", transactionId.trim());
+        params.append("PaymentStatus", "PENDING");
 
         const sheetRes = await fetch(GOOGLE_SHEET_URL, {
             method: "POST",
@@ -93,17 +62,21 @@ export async function POST(req: NextRequest) {
         }
 
         console.log(
-            `✅ Registration submitted — Payment: ${paymentId}, Order: ${orderId}`
+            `⏳ Manual UPI registration submitted — UTR: ${transactionId}, Name: ${formData.Name}`
         );
 
         // Send confirmation emails (await so Vercel doesn't kill the function early)
-        await sendConfirmationEmails({ formData, paymentId, orderId }).catch((err) =>
+        await sendConfirmationEmails({
+            formData,
+            paymentId: `UTR-${transactionId.trim()}`,
+            orderId: "MANUAL_UPI",
+        }).catch((err) =>
             console.error("❌ Email sending failed:", err.message)
         );
 
         return NextResponse.json({ success: true });
     } catch (error: any) {
-        console.error("Submit registration error:", error);
+        console.error("Submit manual registration error:", error);
         return NextResponse.json(
             { error: "Failed to submit registration" },
             { status: 500 }

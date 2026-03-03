@@ -70,7 +70,7 @@ function FailedContent() {
                             </div>
 
                             <Link
-                                href="/workshopReg"
+                                href="/workshopReg2"
                                 className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white rounded-xl font-medium transition-all duration-200 shadow-lg shadow-rose-500/25 hover:shadow-rose-500/40"
                             >
                                 <svg
