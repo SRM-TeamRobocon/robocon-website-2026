@@ -734,6 +734,7 @@ export default function App() {
                         Select one
                       </option>
                       <option value="Day Scholar">Day Scholar</option>
+                      <option value="N Block">N Block</option>
                       <option value="Kaari">Kaari</option>
                       <option value="Paari">Paari</option>
                       <option value="Oori">Oori</option>
