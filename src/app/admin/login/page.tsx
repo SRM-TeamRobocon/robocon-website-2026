@@ -111,10 +111,10 @@ export default function AdminLogin() {
                         </div>
 
                         {error && (
-                            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4">
+                            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-4 flex items-center justify-center">
                                 <div className="flex">
                                     <div className="ml-3">
-                                        <h3 className="text-sm font-medium text-red-500">{error}</h3>
+                                        <h3 className="text-sm text-red font-bold">{error}</h3>
                                     </div>
                                 </div>
                             </div>

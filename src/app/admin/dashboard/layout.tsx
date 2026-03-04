@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
 import { Toaster } from "react-hot-toast";
 
 export default function AdminLayout({
@@ -11,6 +10,32 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const [username, setUsername] = useState("Admin");
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await fetch("/api/admin/me");
+                const data = await res.json();
+                if (data.success) {
+                    if (data.user === "spacedlead") setUsername("SPACED LEAD");
+                    else if (data.user === "robocOnlead") setUsername("TEAM LEAD");
+                    else if (data.user === "siesedlead") setUsername("SIESED LEAD");
+                    else if (data.user === "mcsocdlead") setUsername("MCSOCD LEAD");
+                    else if (data.user === "sambedlead") setUsername("SAMBED LEAD");
+                    else if (data.user === "siesed") setUsername("SIESED");
+                    else if (data.user === "mcsocd") setUsername("MCSOCD");
+                    else if (data.user === "sambed") setUsername("SAMBED");
+                    else if(data.user === "spaced") setUsername("SPACED");
+                    else setUsername("MEMBER");
+                }
+            } catch (e) {
+                console.error("Failed to fetch user", e);
+            }
+        };
+        fetchUser();
+    }, []);
+
     return (
         <div className="min-h-screen relative z-10 flex flex-col">
             <Toaster position="top-right" toastOptions={{
@@ -48,13 +73,13 @@ export default function AdminLayout({
                                     className="rounded"
                                 />
                                 <span className="text-white font-bold text-lg hidden sm:block">
-                                    Robocon Admin
+                                    {username}
                                 </span>
                             </Link>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <span className="text-gray-300 font-medium text-sm hidden sm:block">Admin</span>
+                            <span className="text-gray-300 font-medium text-sm hidden sm:block">{username}</span>
 
                             <Link
                                 href="/admin/scanner"

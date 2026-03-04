@@ -13,10 +13,31 @@ interface Metric {
 export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState<Metric>({ total: 0, pending: 0, verified: 0, checkedIn: 0 });
+    const [username, setUsername] = useState("Admin");
 
     useEffect(() => {
-        const fetchStats = async () => {
+        const fetchDashboardData = async () => {
             try {
+                // Fetch User Info
+                const userRes = await fetch("/api/admin/me");
+                const userData = await userRes.json();
+                if (userData.success) {
+                    if (userData.user == "spacedlead") {
+                        setUsername("SIDDHANT JAIN");
+                    }
+                    else if (userData.user == "robocOnlead") {
+                        setUsername("ANUSHREE DATTA");
+                    } else if(userData.user == "siesedlead") {
+                        setUsername("ASHUTOSH");
+                    } else if(userData.user == "mcsocdlead") {
+                        setUsername("AGAMJOT KAUR");
+                    } else if(userData.user == "sambedlead") {
+                        setUsername("NITHYA GURU");
+                    } else{
+                        setUsername("MEMBER");
+                    }
+                }
+
                 // Fetch ALL registrations (no event filter)
                 const res = await fetch("/api/admin/registrations");
                 const json = await res.json();
@@ -37,15 +58,22 @@ export default function AdminDashboard() {
             }
         };
 
-        fetchStats();
+        fetchDashboardData();
     }, []);
 
     return (
         <div>
             <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Event Dashboard</h1>
-                    <p className="text-gray-400">Select an event below to manage participants, verify payments, and check-in attendees.</p>
+                    <h1 className="text-4xl font-black text-white mb-2 tracking-tight">{username}</h1>
+                    <div className="flex items-center gap-2 mb-4">
+                        <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-bold rounded-lg backdrop-blur-sm">
+                            SRM Team Robocon 2026
+                        </span>
+                        <span className="text-gray-500">•</span>
+                        <span className="text-gray-300 font-medium">EVENT DASHBOARD</span>
+                    </div>
+                    <p className="text-gray-400 max-w-xl leading-relaxed">Select an event below to manage participants, verify payments, and check-in attendees.</p>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full md:w-auto">
