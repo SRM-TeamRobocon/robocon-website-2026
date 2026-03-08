@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: "When and where are the workshops?",
-    a: "We are holding our flagship SolidWorks and Altium workshops on 11th, 12th and 13th of March, from 9 a.m. to 3 p.m. each day. The Solidworks workshop is happening at Hi-Tech 513.",
+    a: "We are holding our flagship SolidWorks and Altium workshops on 11th, 12th and 13th of March, from 9 a.m. to 3 p.m. each day. The Solidworks workshop is happening at Hi-Tech 513 & Altium workshop Automobile seminar hall. Both workshops run simultaneously, so you can choose to attend either one based on your interest.",
   },
   {
     q: "What should I bring?",
